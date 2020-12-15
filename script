@@ -1,0 +1,18 @@
+#!/bin/sh
+export PGDATA=~/project/DemoDb/
+rm -rf ~/project/DemoDb/
+cd ~/project/pgsql
+make
+make install
+~/project/bin/initdb
+echo "listen_addresses = '*'">>~/project/DemoDb/postgresql.conf
+echo "work_mem = 512MB">>~/project/DemoDb/postgresql.conf
+echo "maintenance_work_mem = 512MB">>~/project/DemoDb/postgresql.conf
+sed -i '113s/.*/shared_buffers = 2048MB/' ~/project/DemoDb/postgresql.conf
+
+~/project/bin/pg_ctl start
+
+~/project/bin/pgbench postgres -i -s 70
+~/project/bin/pgbench postgres -c 4 -j 2 -T 60
+
+~/project/bin/pg_ctl stop
