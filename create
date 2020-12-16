@@ -1,0 +1,1 @@
+.\psql postgres -c "create table sample(id text, value text); create index idx on sample(id); insert into sample select 'key'||x id, 'value'||x \"value\" from generate_series(1,1e5) x;"
